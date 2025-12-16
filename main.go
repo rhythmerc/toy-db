@@ -26,38 +26,34 @@ scan:
 
 		switch tokens[0] {
 		case "get":
-			{
-				if len(tokens) < 2 {
-					break
-				}
-
-				key := tokens[1]
-				value, err := db.Read(key)
-				if err != nil {
-					if errors.As(err, &knf) {
-						break
-					}
-					log.Fatal(err)
-				}
-
-				fmt.Println(value)
+			if len(tokens) < 2 {
+				break
 			}
-		case "set":
-			{
-				if len(tokens) < 3 {
+
+			key := tokens[1]
+			value, err := db.Read(key)
+			if err != nil {
+				if errors.As(err, &knf) {
 					break
 				}
+				log.Fatal(err)
+			}
 
-				key := tokens[1]
-				value := tokens[2]
-				for i := 3; i < len(tokens); i++ {
-					value += " " + tokens[i]
-				}
+			fmt.Println(value)
+		case "set":
+			if len(tokens) < 3 {
+				break
+			}
 
-				err := db.Write(key, value)
-				if err != nil {
-					log.Fatal(err)
-				}
+			key := tokens[1]
+			value := tokens[2]
+			for i := 3; i < len(tokens); i++ {
+				value += " " + tokens[i]
+			}
+
+			err := db.Write(key, value)
+			if err != nil {
+				log.Fatal(err)
 			}
 		case "exit":
 			break scan
