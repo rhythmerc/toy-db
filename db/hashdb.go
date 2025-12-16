@@ -1,4 +1,4 @@
-package main
+package db
 
 import (
 	"bufio"
@@ -7,11 +7,6 @@ import (
 	"os"
 	"strings"
 )
-
-type DB interface {
-	read(key string) (string, error)
-	write(key string, value string) error
-}
 
 type HashDB struct {
 	file    *os.File

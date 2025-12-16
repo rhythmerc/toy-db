@@ -4,25 +4,26 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	godb "go_db/db"
 	"log"
 	"os"
 	"strings"
 )
 
+const MAX_TOKENS = 3
+
 func main() {
-	db, err := NewHashDB("db.txt")
+	db, err := godb.NewHashDB("db.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	var knf *KeyNotFoundError
 
 	in := bufio.NewScanner(os.Stdin)
 
 scan:
 	for in.Scan() {
 		line := in.Text()
-		tokens := strings.Split(line, " ")
+		tokens := strings.SplitN(line, " ", MAX_TOKENS)
 
 		switch tokens[0] {
 		case "get":
@@ -33,7 +34,7 @@ scan:
 			key := tokens[1]
 			value, err := db.Read(key)
 			if err != nil {
-				if errors.As(err, &knf) {
+				if errors.As(err, &godb.ERR_KNF) {
 					break
 				}
 				log.Fatal(err)
@@ -47,9 +48,6 @@ scan:
 
 			key := tokens[1]
 			value := tokens[2]
-			for i := 3; i < len(tokens); i++ {
-				value += " " + tokens[i]
-			}
 
 			err := db.Write(key, value)
 			if err != nil {

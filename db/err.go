@@ -1,4 +1,4 @@
-package main
+package db
 
 import "fmt"
 
@@ -9,3 +9,5 @@ type KeyNotFoundError struct {
 func (err *KeyNotFoundError) Error() string {
 	return fmt.Sprintf("key %s not found", err.key)
 }
+
+var ERR_KNF *KeyNotFoundError
